@@ -116,7 +116,7 @@ def inicializar_juego():
     :return: El mapa y la posición del jugador.
     """
     posicion_jugador = posicion_inicial_del_jugador()
-    mapa = generar_mapa()
+    mapa = generar_mapa(posicion_jugador)
     while mapa[posicion_jugador[FILAS]][posicion_jugador[COLUMNAS]] == CELDA_TESORO:
         mapa = generar_mapa()
 
@@ -127,10 +127,10 @@ def posicion_inicial_del_jugador() -> tuple:
     """ Devuelve la posición inicial del jugador. Actualmente es la posición central del mapa.
     :return: La posición inicial del jugador.
     """
-    return (DIMENSIONES // 2)-1, (DIMENSIONES // 2)-1
+    return random.randint(0,4), random.randint(0,4) #cambiamos el lugar de origen determinado por uno totalmente aleatorio
 
 
-def generar_mapa() -> list:
+def generar_mapa(posicion_jugador) -> list:
     """Genera un mapa de la isla con pistas y trampas correctamente colocadas. Con el siguiente contenido:
         - "X" indica el tesoro, y es única en el mapa.
         - "!" indica una trampa, y puede haber varias.
@@ -151,7 +151,9 @@ def generar_mapa() -> list:
     # Colocar pistas y trampas , aquí recorremos la lista 
     for i in range (DIMENSIONES):
         for j in range(DIMENSIONES):
-            if mapa[i][j] != CELDA_TESORO:
+            if (i,j) == posicion_jugador:
+                mapa[i][j] = "J"
+            elif mapa[i][j] != CELDA_TESORO:
                 # Decidir aleatoriamente si colocar una pista, una trampa o vacia. He añadido la variable eleccion y la he sustiyuido por opcion ya que el cambio lo hago sobre el mapa .
                 eleccion = random.randint(1,3)
                 if eleccion == 1:
@@ -279,7 +281,7 @@ def imprimir_mapa_oculto(mapa: list):
     for fila in range(DIMENSIONES):
         print(str(fila + 1), end=" ")
         for columna in range(1):
-            print(" ".join([simbolo_celda(celda) for celda in mapa]))
+            print(" ".join([simbolo_celda(celda) for celda in mapa if celda!= "j"]))
     print()
     
 
